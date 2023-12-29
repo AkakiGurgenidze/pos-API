@@ -33,8 +33,8 @@ class ReceiptItemEnvelope(BaseModel):
     receipt: ReceiptItem
 
 
-class ReceiptListEnvelope(BaseModel):
-    receipts: list[ReceiptItemEnvelope]
+class UpdateReceiptStatusItem(BaseModel):
+    status: str
 
 
 class EmptyResponse(BaseModel):
@@ -69,6 +69,17 @@ def add_product(receipt_id: UUID, req: AddProductItem, receipts: ReceiptReposito
 def read_by_id(receipt_id: UUID, receipts: ReceiptRepositoryDependable):
     try:
         return {"receipt": receipts.read(receipt_id)}
+    except DoesNotExistError as e:
+        return e.get_error_json_response(404)
+
+
+@receipt_api.patch("/receipts/{receipt_id}",
+                   status_code=200,
+                   response_model=EmptyResponse)
+def read_by_id(receipt_id: UUID, req: UpdateReceiptStatusItem, receipts: ReceiptRepositoryDependable):
+    try:
+        receipts.update_status(receipt_id, req.status)
+        return {}
     except DoesNotExistError as e:
         return e.get_error_json_response(404)
 

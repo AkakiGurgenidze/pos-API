@@ -100,6 +100,25 @@ def test_should_not_read_unknown(client: TestClient) -> None:
     assert response.status_code == 404
     assert response.json() == {"error": {"message": f"Receipt with id<{receipt_id}> does not exist."}}
 
+
+def test_should_change_status(client: TestClient) -> None:
+    response = client.post("/receipts")
+    receipt_id = response.json()['receipt']['id']
+
+    response = client.patch(f'/receipts/{receipt_id}', json={"status": "closed"})
+
+    assert response.status_code == 200
+    assert response.json() == {}
+
+    response = client.get(f"/receipts/{receipt_id}")
+    assert response.status_code == 200
+    assert response.json() == {"receipt": {"id": receipt_id,
+                                           "status": "closed",
+                                           "products": [],
+                                           "total": 0
+                                           }
+                               }
+
 #
 # def test_should_not_create_product_that_exists(client: TestClient) -> None:
 #     unit_id = get_unit_id(client)
