@@ -10,6 +10,11 @@ from infra.fastapi.dependables import ProductRepositoryDependable, ReceiptReposi
 receipt_api = APIRouter(tags=["Receipts"])
 
 
+class AddProductItem(BaseModel):
+    id: UUID
+    quantity: int
+
+
 class ProductInReceiptItem(BaseModel):
     id: UUID
     quantity: int
@@ -46,8 +51,27 @@ def create_product(receipts: ReceiptRepositoryDependable):
         return {"receipt": receipt}
     except AlreadyExistError as e:
         return e.get_error_json_response(409)
-#
-#
+
+
+@receipt_api.post("/receipts/{receipt_id}/products",
+                  status_code=201,
+                  response_model=ReceiptItemEnvelope)
+def add_product(receipt_id: UUID, req: AddProductItem, receipts: ReceiptRepositoryDependable):
+    try:
+        return {"receipt": receipts.add_product(receipt_id, req.id, req.quantity)}
+    except DoesNotExistError as e:
+        return e.get_error_json_response(404)
+
+
+@receipt_api.get("/receipts/{receipt_id}",
+                 status_code=200,
+                 response_model=ReceiptItemEnvelope)
+def read_by_id(receipt_id: UUID, receipts: ReceiptRepositoryDependable):
+    try:
+        return {"receipt": receipts.read(receipt_id)}
+    except DoesNotExistError as e:
+        return e.get_error_json_response(404)
+
 # @product_api.get("/products/{product_id}",
 #                  status_code=200,
 #                  response_model=ProductItemEnvelope,

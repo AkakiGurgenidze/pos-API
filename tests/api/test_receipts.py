@@ -23,7 +23,7 @@ def get_product(unit_id: UUID, product_name: str = "Apple", barcode: str = '6604
     }
 
 
-def get_unit_id(client):
+def create_unit_and_get_id(client):
     unit = {
         "name": "კგ"
     }
@@ -32,22 +32,74 @@ def get_unit_id(client):
     return unit_id
 
 
+def create_product_and_get_id(client, unit_id: UUID, product_price: int):
+    product = get_product(unit_id, price=product_price)
+    response = client.post("/products", json=product)
+    product_id = response.json()["product"]["id"]
+    return product_id
+
+
 def test_should_create_receipt(client: TestClient) -> None:
     response = client.post("/receipts")
 
     assert response.status_code == 201
     assert response.json() == {"receipt": {"id": ANY, "status": "open", "products": [], "total": 0}}
 
-#
-# def test_should_create_product(client: TestClient) -> None:
-#     unit_id = get_unit_id(client)
-#
-#     product = get_product(unit_id)
-#     response = client.post("/products", json=product)
-#
-#     assert response.status_code == 201
-#     assert response.json() == {"product": {"id": ANY, **product}}
-#
+
+def test_should_add_product_in_receipt(client: TestClient) -> None:
+    unit_id = create_unit_and_get_id(client)
+    product_price = 10
+    product_id = create_product_and_get_id(client, unit_id, product_price)
+
+    response = client.post("/receipts")
+    receipt_id = response.json()['receipt']['id']
+    response = client.post(f"/receipts/{receipt_id}/products", json={"id": product_id, "quantity": 3})
+
+    assert response.status_code == 201
+    assert response.json() == {"receipt": {"id": receipt_id,
+                                           "status": "open",
+                                           "products": [{
+                                               "id": product_id,
+                                               "quantity": 3,
+                                               "price": 10,
+                                               "total": 30
+                                           }],
+                                           "total": 30
+                                           }
+                               }
+
+
+def test_read_by_id(client: TestClient) -> None:
+    unit_id = create_unit_and_get_id(client)
+    product_price = 10
+    product_id = create_product_and_get_id(client, unit_id, product_price)
+
+    response = client.post("/receipts")
+    receipt_id = response.json()['receipt']['id']
+    client.post(f"/receipts/{receipt_id}/products", json={"id": product_id, "quantity": 3})
+
+    response = client.get(f"/receipts/{receipt_id}")
+    assert response.status_code == 200
+    assert response.json() == {"receipt": {"id": receipt_id,
+                                           "status": "open",
+                                           "products": [{
+                                               "id": product_id,
+                                               "quantity": 3,
+                                               "price": 10,
+                                               "total": 30
+                                           }],
+                                           "total": 30
+                                           }
+                               }
+
+
+def test_should_not_read_unknown(client: TestClient) -> None:
+    receipt_id = uuid4()
+
+    response = client.get(f"/receipts/{receipt_id}")
+    assert response.status_code == 404
+    assert response.json() == {"error": {"message": f"Receipt with id<{receipt_id}> does not exist."}}
+
 #
 # def test_should_not_create_product_that_exists(client: TestClient) -> None:
 #     unit_id = get_unit_id(client)

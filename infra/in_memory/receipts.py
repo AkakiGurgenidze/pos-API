@@ -23,6 +23,7 @@ class ReceiptsInMemory:
 
         self.receipts[receipt_id].products.append(
             ProductInReceipt(product_id, quantity, product.price, product.price * quantity))
+        self.receipts[receipt_id].total = product.price * quantity
         return self.receipts[receipt_id]
 
     def read(self, receipt_id: UUID) -> Receipt:
