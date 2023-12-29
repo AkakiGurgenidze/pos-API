@@ -127,6 +127,41 @@ def test_should_not_change_status_on_unknown(client: TestClient) -> None:
     assert response.status_code == 404
     assert response.json() == {"error": {"message": f"Receipt with id<{receipt_id}> does not exist."}}
 
+
+def test_should_delete_receipt(client: TestClient) -> None:
+    response = client.post("/receipts")
+    receipt_id = response.json()['receipt']['id']
+
+    response = client.delete(f'/receipts/{receipt_id}')
+
+    assert response.status_code == 200
+    assert response.json() == {}
+
+    response = client.get(f"/receipts/{receipt_id}")
+    assert response.status_code == 404
+    assert response.json() == {"error": {"message": f"Receipt with id<{receipt_id}> does not exist."}}
+
+
+def test_should_not_delete_closed_receipt(client: TestClient) -> None:
+    response = client.post("/receipts")
+    receipt_id = response.json()['receipt']['id']
+    client.patch(f'/receipts/{receipt_id}', json={"status": "closed"})
+    response = client.delete(f'/receipts/{receipt_id}')
+
+    assert response.status_code == 403
+    assert response.json() == {"error": {"message": f"Receipt with id<{receipt_id}> is closed."}}
+
+    response = client.get(f"/receipts/{receipt_id}")
+    assert response.status_code == 200
+
+
+def test_should_not_delete_unknown_receipt(client: TestClient) -> None:
+    receipt_id = uuid4()
+    response = client.delete(f'/receipts/{receipt_id}')
+
+    assert response.status_code == 404
+    assert response.json() == {"error": {"message": f"Receipt with id<{receipt_id}> does not exist."}}
+
 #
 # def test_should_not_create_product_that_exists(client: TestClient) -> None:
 #     unit_id = get_unit_id(client)
