@@ -4,6 +4,7 @@ from fastapi import Depends
 from fastapi.requests import Request
 
 from core.product import ProductRepository
+from core.receipt import ReceiptRepository
 from core.unit import UnitRepository
 
 
@@ -19,3 +20,10 @@ def get_product_repository(request: Request) -> ProductRepository:
 
 
 ProductRepositoryDependable = Annotated[ProductRepository, Depends(get_product_repository)]
+
+
+def get_receipt_repository(request: Request) -> ReceiptRepository:
+    return request.app.state.receipts  # type: ignore
+
+
+ReceiptRepositoryDependable = Annotated[ReceiptRepository, Depends(get_receipt_repository)]

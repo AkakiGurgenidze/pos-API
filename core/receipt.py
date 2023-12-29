@@ -13,9 +13,9 @@ class ProductInReceipt:
 
 @dataclass
 class Receipt:
-    status: str
-    products: list[ProductInReceipt]
-
+    status: str = "open"
+    total: int = 0
+    products: list[ProductInReceipt] = field(default_factory=list)
     id: UUID = field(default_factory=uuid4)
 
 
