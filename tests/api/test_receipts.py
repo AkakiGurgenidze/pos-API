@@ -119,6 +119,14 @@ def test_should_change_status(client: TestClient) -> None:
                                            }
                                }
 
+
+def test_should_not_change_status_on_unknown(client: TestClient) -> None:
+    receipt_id = uuid4()
+    response = client.patch(f"/receipts/{receipt_id}", json={"status": "closed"})
+
+    assert response.status_code == 404
+    assert response.json() == {"error": {"message": f"Receipt with id<{receipt_id}> does not exist."}}
+
 #
 # def test_should_not_create_product_that_exists(client: TestClient) -> None:
 #     unit_id = get_unit_id(client)
