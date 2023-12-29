@@ -5,7 +5,7 @@ from pydantic import BaseModel
 
 from core.errors import DoesNotExistError, ClosedReceiptError, ErrorMessageEnvelope
 from core.receipt import Receipt
-from infra.fastapi.dependables import ReceiptRepositoryDependable
+from infra.fastapi.dependables import ReceiptRepositoryDependable, SalesRepositoryDependable
 
 receipt_api = APIRouter(tags=["Receipts"])
 
@@ -76,9 +76,11 @@ def read_receipt(receipt_id: UUID, receipts: ReceiptRepositoryDependable):
                    status_code=200,
                    response_model=EmptyResponse,
                    responses={404: {'model': ErrorMessageEnvelope}})
-def update_receipt(receipt_id: UUID, req: UpdateReceiptStatusItem, receipts: ReceiptRepositoryDependable):
+def update_receipt(receipt_id: UUID, req: UpdateReceiptStatusItem, receipts: ReceiptRepositoryDependable,
+                   sales: SalesRepositoryDependable):
     try:
         receipts.update_status(receipt_id, req.status)
+        sales.update(receipts.read(receipt_id).total)
         return {}
     except DoesNotExistError as e:
         return e.get_error_json_response(404)
