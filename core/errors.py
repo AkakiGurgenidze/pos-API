@@ -49,26 +49,3 @@ class ClosedReceiptError(Exception):
             status_code=code,
             content={"error": {"message": f"{self.name} with {self.field}<{self.value}> is closed."}}
         )
-
-#
-# class ErrorResponses:
-#     @staticmethod
-#     def get_already_exist_error_json(code: int, name: str, field: str, value: str):
-#         return JSONResponse(
-#             status_code=code,
-#             content={"error": {"message": f"{name} with {field}<{value}> already exists."}}
-#         )
-#
-#     @staticmethod
-#     def get_doesnt_exist_error_json(code: int, name: str, field: str, value: str):
-#         return JSONResponse(
-#             status_code=code,
-#             content={"error": {"message": f"{name} with {field}<{value}> does not exist."}}
-#         )
-#
-#     @staticmethod
-#     def get_closed_receipt_error_json(code: int, value: str):
-#         return JSONResponse(
-#             status_code=code,
-#             content={"error": {"message": f"Receipt with id<{value}> is closed."}}
-#         )
