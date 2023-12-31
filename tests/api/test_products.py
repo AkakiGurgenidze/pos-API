@@ -5,7 +5,7 @@ import pytest
 from fastapi.testclient import TestClient
 
 from runner.setup import init_app
-from tests.api.all_in_one import create_unit_and_get_id, get_default_product
+from tests.api.fixture_functions import create_unit_and_get_id, get_default_product
 
 
 @pytest.fixture
