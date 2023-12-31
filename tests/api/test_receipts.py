@@ -44,6 +44,37 @@ def test_should_add_product_in_receipt(client: TestClient) -> None:
     }
 
 
+def test_should_not_add_product_in_unknown_receipt(client: TestClient) -> None:
+    unit_id = create_unit_and_get_id(client)
+    product_price = 10
+    product_id = create_product_and_get_id(client, unit_id, product_price)
+
+    receipt_id = uuid4()
+    response = client.post(
+        f"/receipts/{receipt_id}/products", json={"id": product_id, "quantity": 3}
+    )
+
+    assert response.status_code == 404
+    assert response.json() == {
+        "error": {"message": f"Receipt with id<{receipt_id}> does not exist."}
+    }
+
+
+def test_should_not_add_unknown_product_in_receipt(client: TestClient) -> None:
+    product_id = str(uuid4())
+
+    response = client.post("/receipts")
+    receipt_id = response.json()["receipt"]["id"]
+    response = client.post(
+        f"/receipts/{receipt_id}/products", json={"id": product_id, "quantity": 3}
+    )
+
+    assert response.status_code == 404
+    assert response.json() == {
+        "error": {"message": f"Product with id<{product_id}> does not exist."}
+    }
+
+
 def test_read_by_id(client: TestClient) -> None:
     unit_id = create_unit_and_get_id(client)
     product_price = 10

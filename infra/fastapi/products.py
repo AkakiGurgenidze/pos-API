@@ -47,11 +47,8 @@ class EmptyResponse(BaseModel):
     },
 )
 def create_product(request: CreateProductItem, products: ProductRepositoryDependable):
-    print("aqweq")
     product = Product(**request.model_dump())
-    print("zxcc")
     try:
-        print("aqaaa")
         products.create(product)
         return {"product": product}
     except AlreadyExistError as e:
