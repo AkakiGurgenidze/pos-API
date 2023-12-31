@@ -3,7 +3,7 @@ from uuid import UUID
 from fastapi import APIRouter
 from pydantic import BaseModel
 
-from core.errors import ErrorMessageEnvelope, AlreadyExistError, DoesNotExistError
+from core.errors import AlreadyExistError, DoesNotExistError, ErrorMessageEnvelope
 from core.product import Product
 from infra.fastapi.dependables import ProductRepositoryDependable
 

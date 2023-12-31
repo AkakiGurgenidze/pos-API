@@ -2,7 +2,7 @@ from uuid import uuid4
 
 import pytest
 
-from core.errors import AlreadyExistError, DoesNotExistError, ClosedReceiptError
+from core.errors import ClosedReceiptError, DoesNotExistError
 from core.product import Product
 from core.receipt import Receipt
 from core.unit import Unit

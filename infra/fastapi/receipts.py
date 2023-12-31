@@ -3,7 +3,7 @@ from uuid import UUID
 from fastapi import APIRouter
 from pydantic import BaseModel
 
-from core.errors import DoesNotExistError, ClosedReceiptError, ErrorMessageEnvelope
+from core.errors import ClosedReceiptError, DoesNotExistError, ErrorMessageEnvelope
 from core.receipt import Receipt
 from infra.fastapi.dependables import (
     ReceiptRepositoryDependable,

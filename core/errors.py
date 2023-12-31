@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
-from pydantic import BaseModel
 from fastapi.responses import JSONResponse
+from pydantic import BaseModel
 
 
 class ErrorMessageResponse(BaseModel):

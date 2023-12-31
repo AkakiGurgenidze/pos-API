@@ -1,8 +1,8 @@
-from dataclasses import field, dataclass
+from dataclasses import dataclass, field
 from uuid import UUID
 
-from core.errors import DoesNotExistError, ClosedReceiptError
-from core.receipt import Receipt, ProductInReceipt
+from core.errors import ClosedReceiptError, DoesNotExistError
+from core.receipt import ProductInReceipt, Receipt
 from infra.in_memory.products import ProductsInMemory
 
 
