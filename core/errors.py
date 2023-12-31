@@ -18,7 +18,7 @@ class AlreadyExistError(Exception):
     field: str
     value: str
 
-    def get_error_json_response(self, code: int = 409):
+    def get_error_json_response(self, code: int = 409) -> JSONResponse:
         return JSONResponse(
             status_code=code,
             content={
@@ -35,7 +35,7 @@ class DoesNotExistError(Exception):
     field: str
     value: str
 
-    def get_error_json_response(self, code: int = 404):
+    def get_error_json_response(self, code: int = 404) -> JSONResponse:
         return JSONResponse(
             status_code=code,
             content={
@@ -52,7 +52,7 @@ class ClosedReceiptError(Exception):
     field: str
     value: str
 
-    def get_error_json_response(self, code: int = 403):
+    def get_error_json_response(self, code: int = 403) -> JSONResponse:
         return JSONResponse(
             status_code=code,
             content={
