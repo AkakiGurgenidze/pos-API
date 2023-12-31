@@ -21,7 +21,11 @@ class AlreadyExistError(Exception):
     def get_error_json_response(self, code: int = 409):
         return JSONResponse(
             status_code=code,
-            content={"error": {"message": f"{self.name} with {self.field}<{self.value}> already exists."}}
+            content={
+                "error": {
+                    "message": f"{self.name} with {self.field}<{self.value}> already exists."
+                }
+            },
         )
 
 
@@ -34,7 +38,11 @@ class DoesNotExistError(Exception):
     def get_error_json_response(self, code: int = 404):
         return JSONResponse(
             status_code=code,
-            content={"error": {"message": f"{self.name} with {self.field}<{self.value}> does not exist."}}
+            content={
+                "error": {
+                    "message": f"{self.name} with {self.field}<{self.value}> does not exist."
+                }
+            },
         )
 
 
@@ -47,5 +55,9 @@ class ClosedReceiptError(Exception):
     def get_error_json_response(self, code: int = 403):
         return JSONResponse(
             status_code=code,
-            content={"error": {"message": f"{self.name} with {self.field}<{self.value}> is closed."}}
+            content={
+                "error": {
+                    "message": f"{self.name} with {self.field}<{self.value}> is closed."
+                }
+            },
         )

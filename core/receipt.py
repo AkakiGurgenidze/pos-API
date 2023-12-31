@@ -23,7 +23,7 @@ class ReceiptRepository(Protocol):
     def create(self, receipt: Receipt) -> None:
         pass
 
-    def add_product(self, receipt_id: UUID, product_id: UUID, quantity: int) -> None:
+    def add_product(self, receipt_id: UUID, product_id: UUID, quantity: int) -> Receipt:
         pass
 
     def read(self, receipt_id: UUID) -> Receipt:

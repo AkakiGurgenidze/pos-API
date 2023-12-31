@@ -32,9 +32,11 @@ class UnitListEnvelope(BaseModel):
     "/units",
     status_code=201,
     response_model=UnitItemEnvelope,
-    responses={409: {'model': ErrorMessageEnvelope}}
+    responses={409: {"model": ErrorMessageEnvelope}},
 )
-def create_unit(request: CreateUnitItem, units: UnitRepositoryDependable) -> dict[str, Unit] | JSONResponse:
+def create_unit(
+    request: CreateUnitItem, units: UnitRepositoryDependable
+) -> dict[str, Unit] | JSONResponse:
     unit = Unit(**request.model_dump())
     try:
         units.create(unit)
@@ -47,9 +49,11 @@ def create_unit(request: CreateUnitItem, units: UnitRepositoryDependable) -> dic
     "/units/{unit_id}",
     status_code=200,
     response_model=UnitItemEnvelope,
-    responses={404: {'model': ErrorMessageEnvelope}}
+    responses={404: {"model": ErrorMessageEnvelope}},
 )
-def read_unit(unit_id: UUID, units: UnitRepositoryDependable) -> dict[str, Unit] | JSONResponse:
+def read_unit(
+    unit_id: UUID, units: UnitRepositoryDependable
+) -> dict[str, Unit] | JSONResponse:
     try:
         return {"unit": units.read(unit_id)}
     except DoesNotExistError as e:

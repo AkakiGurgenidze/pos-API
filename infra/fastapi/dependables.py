@@ -20,14 +20,18 @@ def get_product_repository(request: Request) -> ProductRepository:
     return request.app.state.products  # type: ignore
 
 
-ProductRepositoryDependable = Annotated[ProductRepository, Depends(get_product_repository)]
+ProductRepositoryDependable = Annotated[
+    ProductRepository, Depends(get_product_repository)
+]
 
 
 def get_receipt_repository(request: Request) -> ReceiptRepository:
     return request.app.state.receipts  # type: ignore
 
 
-ReceiptRepositoryDependable = Annotated[ReceiptRepository, Depends(get_receipt_repository)]
+ReceiptRepositoryDependable = Annotated[
+    ReceiptRepository, Depends(get_receipt_repository)
+]
 
 
 def get_sales_repository(request: Request) -> SalesRepository:

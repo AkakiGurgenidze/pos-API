@@ -22,7 +22,10 @@ class ReceiptsInMemory:
             raise DoesNotExistError("Receipt", "id", str(receipt_id))
 
         self.receipts[receipt_id].products.append(
-            ProductInReceipt(product_id, quantity, product.price, product.price * quantity))
+            ProductInReceipt(
+                product_id, quantity, product.price, product.price * quantity
+            )
+        )
         self.receipts[receipt_id].total = product.price * quantity
         return self.receipts[receipt_id]
 
@@ -46,7 +49,7 @@ class ReceiptsInMemory:
         except KeyError:
             raise DoesNotExistError("Receipt", "id", str(receipt_id))
 
-        if self.receipts[receipt_id].status == 'closed':
+        if self.receipts[receipt_id].status == "closed":
             raise ClosedReceiptError("Receipt", "id", str(receipt_id))
 
         self.receipts.pop(receipt_id)

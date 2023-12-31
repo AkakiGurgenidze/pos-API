@@ -12,6 +12,9 @@ class ProductsInMemory:
     products: dict[UUID, Product] = field(default_factory=dict)
 
     def create(self, product: Product) -> None:
+        print("shemovida")
+        self.units.read(product.unit_id)
+        print("chamovida")
         for curr_product in self.products.values():
             if curr_product.barcode == product.barcode:
                 raise AlreadyExistError("Product", "barcode", product.barcode)
