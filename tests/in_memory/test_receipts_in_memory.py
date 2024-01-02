@@ -128,3 +128,24 @@ def test_delete_closed_receipt_in_memory() -> None:
 
     with pytest.raises(ClosedReceiptError):
         receipts.delete(receipt.id)
+
+
+def test_read_sales_in_memory() -> None:
+    units = UnitsInMemory()
+    products = ProductsInMemory(units)
+    receipts = ReceiptsInMemory(products)
+
+    receipt = Receipt()
+    receipts.create(receipt)
+
+    unit = Unit("kg")
+    units.create(unit)
+
+    product = Product(unit.id, "Apple", "123456789", 10)
+    products.create(product)
+
+    result_receipt = receipts.add_product(receipt.id, product.id, 5)
+    receipts.update_status(receipt.id, "closed")
+
+    assert receipts.read_sales().n_receipts == 1
+    assert receipts.read_sales().revenue == 50

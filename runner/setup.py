@@ -8,7 +8,6 @@ from infra.fastapi.sales import sales_api
 from infra.fastapi.units import unit_api
 from infra.in_memory.products import ProductsInMemory
 from infra.in_memory.receipts import ReceiptsInMemory
-from infra.in_memory.sales import SalesInMemory
 from infra.in_memory.units import UnitsInMemory
 
 
@@ -25,6 +24,5 @@ def init_app():
         app.state.units = UnitsInMemory()  # type: ignore
         app.state.products = ProductsInMemory(app.state.units)  # type: ignore
         app.state.receipts = ReceiptsInMemory(app.state.products)  # type: ignore
-        app.state.sales = SalesInMemory()  # type: ignore
 
     return app

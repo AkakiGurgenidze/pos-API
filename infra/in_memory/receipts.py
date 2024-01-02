@@ -2,7 +2,7 @@ from dataclasses import dataclass, field
 from uuid import UUID
 
 from core.errors import ClosedReceiptError, DoesNotExistError
-from core.receipt import ProductInReceipt, Receipt
+from core.receipt import ProductInReceipt, Receipt, Sales
 from infra.in_memory.products import ProductsInMemory
 
 
@@ -53,3 +53,14 @@ class ReceiptsInMemory:
             raise ClosedReceiptError("Receipt", "id", str(receipt_id))
 
         self.receipts.pop(receipt_id)
+
+    def read_sales(self) -> Sales:
+        n_receipts = 0
+        revenue = 0
+
+        for receipt in self.receipts.values():
+            if receipt.status == "closed":
+                n_receipts += 1
+                revenue += receipt.total
+
+        return Sales(n_receipts, revenue)

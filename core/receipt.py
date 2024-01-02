@@ -19,6 +19,12 @@ class Receipt:
     id: UUID = field(default_factory=uuid4)
 
 
+@dataclass
+class Sales:
+    n_receipts: int = 0
+    revenue: int = 0
+
+
 class ReceiptRepository(Protocol):
     def create(self, receipt: Receipt) -> None:
         pass
@@ -33,4 +39,7 @@ class ReceiptRepository(Protocol):
         pass
 
     def delete(self, receipt_id: UUID) -> None:
+        pass
+
+    def read_sales(self) -> Sales:
         pass

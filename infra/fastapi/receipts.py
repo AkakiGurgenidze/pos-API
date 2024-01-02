@@ -7,7 +7,6 @@ from core.errors import ClosedReceiptError, DoesNotExistError, ErrorMessageEnvel
 from core.receipt import Receipt
 from infra.fastapi.dependables import (
     ReceiptRepositoryDependable,
-    SalesRepositoryDependable,
 )
 
 receipt_api = APIRouter(tags=["Receipts"])
@@ -89,11 +88,9 @@ def update_receipt(
     receipt_id: UUID,
     req: UpdateReceiptStatusItem,
     receipts: ReceiptRepositoryDependable,
-    sales: SalesRepositoryDependable,
 ):
     try:
         receipts.update_status(receipt_id, req.status)
-        sales.update(receipts.read(receipt_id).total)
         return {}
     except DoesNotExistError as e:
         return e.get_error_json_response(404)
