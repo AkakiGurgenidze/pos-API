@@ -156,7 +156,7 @@ def test_read_sales(db: Database) -> None:
     product = Product(unit.id, "Apple", "123456789", 10)
     products.create(product)
 
-    result_receipt = receipts.add_product(receipt.id, product.id, 5)
+    receipts.add_product(receipt.id, product.id, 5)
     receipts.update_status(receipt.id, "closed")
 
     assert receipts.read_sales().n_receipts == 1

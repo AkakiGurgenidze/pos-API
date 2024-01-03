@@ -2,12 +2,11 @@ from uuid import UUID
 
 from fastapi import APIRouter
 from pydantic import BaseModel
+from starlette.responses import JSONResponse
 
 from core.errors import ClosedReceiptError, DoesNotExistError, ErrorMessageEnvelope
 from core.receipt import Receipt
-from infra.fastapi.dependables import (
-    ReceiptRepositoryDependable,
-)
+from infra.fastapi.dependables import ReceiptRepositoryDependable
 
 receipt_api = APIRouter(tags=["Receipts"])
 
@@ -44,7 +43,7 @@ class EmptyResponse(BaseModel):
 
 
 @receipt_api.post("/receipts", status_code=201, response_model=ReceiptItemEnvelope)
-def create_receipt(receipts: ReceiptRepositoryDependable):
+def create_receipt(receipts: ReceiptRepositoryDependable) -> dict[str, Receipt]:
     receipt = Receipt()
     receipts.create(receipt)
     return {"receipt": receipt}
@@ -58,7 +57,7 @@ def create_receipt(receipts: ReceiptRepositoryDependable):
 )
 def add_product(
     receipt_id: UUID, req: AddProductItem, receipts: ReceiptRepositoryDependable
-):
+) -> dict[str, Receipt] | JSONResponse:
     try:
         return {"receipt": receipts.add_product(receipt_id, req.id, req.quantity)}
     except DoesNotExistError as e:
@@ -71,7 +70,9 @@ def add_product(
     response_model=ReceiptItemEnvelope,
     responses={404: {"model": ErrorMessageEnvelope}},
 )
-def read_receipt(receipt_id: UUID, receipts: ReceiptRepositoryDependable):
+def read_receipt(
+    receipt_id: UUID, receipts: ReceiptRepositoryDependable
+) -> dict[str, Receipt] | JSONResponse:
     try:
         return {"receipt": receipts.read(receipt_id)}
     except DoesNotExistError as e:
@@ -88,7 +89,7 @@ def update_receipt(
     receipt_id: UUID,
     req: UpdateReceiptStatusItem,
     receipts: ReceiptRepositoryDependable,
-):
+) -> dict[str, str] | JSONResponse:
     try:
         receipts.update_status(receipt_id, req.status)
         return {}
@@ -105,7 +106,9 @@ def update_receipt(
         404: {"model": ErrorMessageEnvelope},
     },
 )
-def delete_receipt(receipt_id: UUID, receipts: ReceiptRepositoryDependable):
+def delete_receipt(
+    receipt_id: UUID, receipts: ReceiptRepositoryDependable
+) -> dict[str, str] | JSONResponse:
     try:
         receipts.delete(receipt_id)
         return {}

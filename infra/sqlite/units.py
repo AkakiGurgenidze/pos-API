@@ -22,9 +22,7 @@ class UnitsDatabase:
         self.con.commit()
 
     def read(self, unit_id: UUID) -> Unit:
-        res = self.cur.execute(
-            "select * from units where id = ?", [str(unit_id)]
-        )
+        res = self.cur.execute("select * from units where id = ?", [str(unit_id)])
         result = res.fetchone()
         if result is not None and result[0] is not None:
             return Unit(result[1], UUID(result[0]))

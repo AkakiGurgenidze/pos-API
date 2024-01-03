@@ -2,6 +2,7 @@ from uuid import UUID
 
 from fastapi import APIRouter
 from pydantic import BaseModel
+from starlette.responses import JSONResponse
 
 from core.errors import AlreadyExistError, DoesNotExistError, ErrorMessageEnvelope
 from core.product import Product
@@ -46,7 +47,9 @@ class EmptyResponse(BaseModel):
         404: {"model": ErrorMessageEnvelope},
     },
 )
-def create_product(request: CreateProductItem, products: ProductRepositoryDependable):
+def create_product(
+    request: CreateProductItem, products: ProductRepositoryDependable
+) -> dict[str, Product] | JSONResponse:
     product = Product(**request.model_dump())
     try:
         products.create(product)
@@ -63,7 +66,9 @@ def create_product(request: CreateProductItem, products: ProductRepositoryDepend
     response_model=ProductItemEnvelope,
     responses={404: {"model": ErrorMessageEnvelope}},
 )
-def read_product(product_id: UUID, products: ProductRepositoryDependable):
+def read_product(
+    product_id: UUID, products: ProductRepositoryDependable
+) -> dict[str, Product] | JSONResponse:
     try:
         return {"product": products.read(product_id)}
     except DoesNotExistError as e:
@@ -71,7 +76,7 @@ def read_product(product_id: UUID, products: ProductRepositoryDependable):
 
 
 @product_api.get("/products", status_code=200, response_model=ProductListEnvelope)
-def read_all_product(products: ProductRepositoryDependable):
+def read_all_product(products: ProductRepositoryDependable) -> dict[str, list[Product]]:
     return {"products": products.read_all()}
 
 
@@ -83,7 +88,7 @@ def read_all_product(products: ProductRepositoryDependable):
 )
 def update_product(
     product_id: UUID, product_price: int, products: ProductRepositoryDependable
-):
+) -> dict[str, str] | JSONResponse:
     try:
         products.update_price(product_id, product_price)
         return {}

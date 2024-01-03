@@ -1,10 +1,9 @@
-from dataclasses import dataclass, field
-from sqlite3 import Connection, Cursor, IntegrityError, OperationalError
+from dataclasses import dataclass
+from sqlite3 import Connection, Cursor, IntegrityError
 from uuid import UUID
 
 from core.errors import ClosedReceiptError, DoesNotExistError
 from core.receipt import ProductInReceipt, Receipt, Sales
-from infra.in_memory.products import ProductsInMemory
 from infra.sqlite.products import ProductsDatabase
 
 
@@ -23,7 +22,8 @@ class ReceiptsDatabase:
     def add_product(self, receipt_id: UUID, product_id: UUID, quantity: int) -> Receipt:
         try:
             self.cur.executemany(
-                "insert into products_in_receipts(receipt_id, product_id, quantity) values (?,?,?)",
+                "insert into products_in_receipts(receipt_id, product_id, quantity)"
+                " values (?,?,?)",
                 [(str(receipt_id), str(product_id), quantity)],
             )
         except IntegrityError as e:
@@ -51,20 +51,21 @@ class ReceiptsDatabase:
         receipt_total = 0
         products_in_receipts = []
         res_products_in_receipts = self.cur.execute(
-            "select * from products_in_receipts where receipt_id = ?", [(str(receipt_id))]
+            "select * from products_in_receipts where receipt_id = ?",
+            [(str(receipt_id))],
         )
         for row in res_products_in_receipts.fetchall():
-            (
-                products_in_receipts_id,
-                receipt_id,
-                product_id,
-                quantity
-            ) = row
+            (products_in_receipts_id, receipt_id, product_id, quantity) = row
             product = ProductsDatabase(self.con, self.cur).read(product_id)
             total = product.price * quantity
             receipt_total += total
-            products_in_receipts.append(ProductInReceipt(UUID(product_id), quantity, product.price, total))
-        return Receipt(status, receipt_total, products_in_receipts, UUID(receipt_id))
+            products_in_receipts.append(
+                ProductInReceipt(UUID(product_id), quantity, product.price, total)
+            )
+
+        return Receipt(
+            status, receipt_total, products_in_receipts, UUID(str(receipt_id))
+        )
 
     def update_status(self, receipt_id: UUID, new_status: str) -> None:
         self.cur.executemany(
@@ -91,24 +92,25 @@ class ReceiptsDatabase:
         n_receipts = 0
         revenue = 0
 
-        res_receipts = self.cur.execute("select id from receipts where status = 'closed'")
+        res_receipts = self.cur.execute(
+            "select id from receipts where status = 'closed'"
+        )
         for row in res_receipts.fetchall():
-            (
-                receipt_id,
-            ) = row
+            (receipt_id,) = row
 
             n_receipts += 1
 
             res_products_in_receipts = self.cur.execute(
-                "select * from products_in_receipts where receipt_id = ?", [(str(receipt_id))]
+                "select * from products_in_receipts where receipt_id = ?",
+                [(str(receipt_id))],
             )
-            for row in res_products_in_receipts.fetchall():
+            for products_in_receipts_row in res_products_in_receipts.fetchall():
                 (
                     products_in_receipts_id,
                     receipt_id,
                     product_id,
-                    quantity
-                ) = row
+                    quantity,
+                ) = products_in_receipts_row
 
                 product = ProductsDatabase(self.con, self.cur).read(product_id)
                 revenue += product.price * quantity

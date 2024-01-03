@@ -5,7 +5,10 @@ import pytest
 from fastapi.testclient import TestClient
 
 from runner.setup import init_app
-from tests.api.fixture_functions import create_product_and_get_id, create_unit_and_get_id
+from tests.api.fixture_functions import (
+    create_product_and_get_id,
+    create_unit_and_get_id,
+)
 
 
 @pytest.fixture

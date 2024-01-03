@@ -16,7 +16,7 @@ from infra.sqlite.receipts import ReceiptsDatabase
 from infra.sqlite.units import UnitsDatabase
 
 
-def init_app():
+def init_app() -> FastAPI:
     app = FastAPI()
     app.include_router(unit_api)
     app.include_router(product_api)
@@ -26,12 +26,12 @@ def init_app():
     if os.getenv("POS_REPOSITORY_KIND", "memory") == "sqlite":
         db = Database(DATABASE_NAME, os.path.abspath(SQL_FILE))
         # db.initial()    Uncomment this if you want to create initial db
-        app.state.units = UnitsDatabase(db.get_connection(), db.get_cursor())  # type: ignore
-        app.state.products = ProductsDatabase(db.get_connection(), db.get_cursor())  # type: ignore
-        app.state.receipts = ReceiptsDatabase(db.get_connection(), db.get_cursor())  # type: ignore
+        app.state.units = UnitsDatabase(db.get_connection(), db.get_cursor())
+        app.state.products = ProductsDatabase(db.get_connection(), db.get_cursor())
+        app.state.receipts = ReceiptsDatabase(db.get_connection(), db.get_cursor())
     else:
-        app.state.units = UnitsInMemory()  # type: ignore
-        app.state.products = ProductsInMemory(app.state.units)  # type: ignore
-        app.state.receipts = ReceiptsInMemory(app.state.products)  # type: ignore
+        app.state.units = UnitsInMemory()
+        app.state.products = ProductsInMemory(app.state.units)
+        app.state.receipts = ReceiptsInMemory(app.state.products)
 
     return app

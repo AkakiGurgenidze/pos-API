@@ -23,7 +23,8 @@ class AlreadyExistError(Exception):
             status_code=code,
             content={
                 "error": {
-                    "message": f"{self.name} with {self.field}<{self.value}> already exists."
+                    "message": f"{self.name} with {self.field}<{self.value}>"
+                    f" already exists."
                 }
             },
         )
@@ -40,7 +41,8 @@ class DoesNotExistError(Exception):
             status_code=code,
             content={
                 "error": {
-                    "message": f"{self.name} with {self.field}<{self.value}> does not exist."
+                    "message": f"{self.name} with {self.field}<{self.value}>"
+                    f" does not exist."
                 }
             },
         )
