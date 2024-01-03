@@ -7,8 +7,8 @@ def get_default_product(
     unit_id: str,
     product_name: str = "Apple",
     barcode: str = "6604876475937",
-    price: int = random.randint(0, 100),
-) -> dict[str, str | int]:
+    price: float = random.randint(0, 10000) / 100,
+) -> dict[str, str | float]:
     return {
         "unit_id": unit_id,
         "name": product_name,
@@ -25,7 +25,7 @@ def create_unit_and_get_id(client: TestClient) -> str:
 
 
 def create_product_and_get_id(
-    client: TestClient, unit_id: str, product_price: int
+    client: TestClient, unit_id: str, product_price: float
 ) -> str:
     product = get_default_product(unit_id, price=product_price)
     response = client.post("/products", json=product)

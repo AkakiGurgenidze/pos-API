@@ -56,7 +56,7 @@ class ReceiptsInMemory:
 
     def read_sales(self) -> Sales:
         n_receipts = 0
-        revenue = 0
+        revenue = 0.0
 
         for receipt in self.receipts.values():
             if receipt.status == "closed":

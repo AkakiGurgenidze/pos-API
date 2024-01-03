@@ -54,7 +54,7 @@ class ProductsDatabase:
             products.append(Product(UUID(unit_id), name, barcode, price, UUID(id)))
         return products
 
-    def update_price(self, product_id: UUID, new_price: int) -> None:
+    def update_price(self, product_id: UUID, new_price: float) -> None:
         self.cur.executemany(
             "update products set price=? where id = ?",
             [(round(new_price, 2), str(product_id))],

@@ -25,7 +25,7 @@ def test_create_product(db: Database) -> None:
     units.create(unit)
 
     products = ProductsDatabase(db.get_connection(), db.get_cursor())
-    product = Product(unit.id, "Apple", "123456789", 10)
+    product = Product(unit.id, "Apple", "123456789", 1.5)
     products.create(product)
 
     db.close_database()
@@ -37,7 +37,7 @@ def test_create_same_product_twice(db: Database) -> None:
     units.create(unit)
 
     products = ProductsDatabase(db.get_connection(), db.get_cursor())
-    product = Product(unit.id, "Apple", "123456789", 10)
+    product = Product(unit.id, "Apple", "123456789", 1.5)
     products.create(product)
 
     with pytest.raises(AlreadyExistError):
@@ -48,7 +48,7 @@ def test_create_same_product_twice(db: Database) -> None:
 
 def test_create_product_with_unknown_unit(db: Database) -> None:
     products = ProductsDatabase(db.get_connection(), db.get_cursor())
-    product = Product(uuid4(), "Apple", "123456789", 10)
+    product = Product(uuid4(), "Apple", "123456789", 1.5)
 
     with pytest.raises(DoesNotExistError):
         products.create(product)
@@ -62,7 +62,7 @@ def test_read_product(db: Database) -> None:
     units.create(unit)
 
     products = ProductsDatabase(db.get_connection(), db.get_cursor())
-    product = Product(unit.id, "Apple", "123456789", 10)
+    product = Product(unit.id, "Apple", "123456789", 1.5)
     products.create(product)
 
     result_product = products.read(product.id)
@@ -84,7 +84,7 @@ def test_read_all_product(db: Database) -> None:
     units.create(unit)
 
     products = ProductsDatabase(db.get_connection(), db.get_cursor())
-    product = Product(unit.id, "Apple", "123456789", 10)
+    product = Product(unit.id, "Apple", "123456789", 1.5)
     products.create(product)
 
     assert products.read_all() == [product]
@@ -98,13 +98,13 @@ def test_update_product_price(db: Database) -> None:
     units.create(unit)
 
     products = ProductsDatabase(db.get_connection(), db.get_cursor())
-    product = Product(unit.id, "Apple", "123456789", 10)
+    product = Product(unit.id, "Apple", "123456789", 1.5)
     products.create(product)
 
-    products.update_price(product.id, 20)
+    products.update_price(product.id, 2.5)
 
     result_product = products.read(product.id)
-    assert result_product.price == 20
+    assert result_product.price == 2.5
 
     db.close_database()
 

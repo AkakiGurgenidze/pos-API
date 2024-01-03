@@ -8,7 +8,7 @@ class Product:
     unit_id: UUID
     name: str
     barcode: str
-    price: int
+    price: float
     id: UUID = field(default_factory=uuid4)
 
 
@@ -22,5 +22,5 @@ class ProductRepository(Protocol):
     def read_all(self) -> list[Product]:
         pass
 
-    def update_price(self, product_id: UUID, new_price: int) -> None:
+    def update_price(self, product_id: UUID, new_price: float) -> None:
         pass

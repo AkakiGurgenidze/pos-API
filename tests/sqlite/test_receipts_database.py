@@ -41,15 +41,15 @@ def test_add_product_in_receipt(db: Database) -> None:
     unit = Unit("kg")
     units.create(unit)
 
-    product = Product(unit.id, "Apple", "123456789", 10)
+    product = Product(unit.id, "Apple", "123456789", 1.5)
     products.create(product)
 
     result_receipt = receipts.add_product(receipt.id, product.id, 5)
 
     assert result_receipt.products[0].id == product.id
     assert result_receipt.products[0].quantity == 5
-    assert result_receipt.products[0].price == 10
-    assert result_receipt.products[0].total == 50
+    assert result_receipt.products[0].price == 1.5
+    assert result_receipt.products[0].total == 7.5
 
     db.close_database()
 
@@ -153,11 +153,11 @@ def test_read_sales(db: Database) -> None:
     unit = Unit("kg")
     units.create(unit)
 
-    product = Product(unit.id, "Apple", "123456789", 10)
+    product = Product(unit.id, "Apple", "123456789", 1.5)
     products.create(product)
 
     receipts.add_product(receipt.id, product.id, 5)
     receipts.update_status(receipt.id, "closed")
 
     assert receipts.read_sales().n_receipts == 1
-    assert receipts.read_sales().revenue == 50
+    assert receipts.read_sales().revenue == 7.5

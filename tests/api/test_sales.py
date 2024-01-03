@@ -25,7 +25,7 @@ def test_update_sales(client: TestClient) -> None:
     receipt_id = response.json()["receipt"]["id"]
 
     unit_id = create_unit_and_get_id(client)
-    product_price = 10
+    product_price = 1.5
     product_id = create_product_and_get_id(client, unit_id, product_price)
     client.post(
         f"/receipts/{receipt_id}/products", json={"id": product_id, "quantity": 3}
@@ -36,4 +36,4 @@ def test_update_sales(client: TestClient) -> None:
     response = client.get("/sales")
 
     assert response.status_code == 200
-    assert response.json() == {"sales": {"revenue": 30, "n_receipts": 1}}
+    assert response.json() == {"sales": {"revenue": 4.5, "n_receipts": 1}}

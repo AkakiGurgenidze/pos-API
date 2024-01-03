@@ -19,15 +19,15 @@ class AddProductItem(BaseModel):
 class ProductInReceiptItem(BaseModel):
     id: UUID
     quantity: int
-    price: int
-    total: int
+    price: float
+    total: float
 
 
 class ReceiptItem(BaseModel):
     id: UUID
     status: str
     products: list[ProductInReceiptItem]
-    total: int
+    total: float
 
 
 class ReceiptItemEnvelope(BaseModel):

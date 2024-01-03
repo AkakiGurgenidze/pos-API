@@ -7,14 +7,14 @@ from uuid import UUID, uuid4
 class ProductInReceipt:
     id: UUID
     quantity: int
-    price: int
-    total: int
+    price: float
+    total: float
 
 
 @dataclass
 class Receipt:
     status: str = "open"
-    total: int = 0
+    total: float = 0
     products: list[ProductInReceipt] = field(default_factory=list)
     id: UUID = field(default_factory=uuid4)
 
@@ -22,7 +22,7 @@ class Receipt:
 @dataclass
 class Sales:
     n_receipts: int = 0
-    revenue: int = 0
+    revenue: float = 0
 
 
 class ReceiptRepository(Protocol):

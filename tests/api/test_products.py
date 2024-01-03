@@ -95,10 +95,10 @@ def test_get_all_products(client: TestClient) -> None:
 def test_update_product_price(client: TestClient) -> None:
     unit_id = create_unit_and_get_id(client)
 
-    product = get_default_product(unit_id, "Bread", "123456789", 10)
+    product = get_default_product(unit_id, "Bread", "123456789", 1.5)
     response = client.post("/products", json=product)
     product_id = response.json()["product"]["id"]
-    new_price = 20
+    new_price = 2.5
     response = client.patch(f"/products/{product_id}/{new_price}")
 
     assert response.status_code == 200

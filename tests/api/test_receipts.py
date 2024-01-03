@@ -27,7 +27,7 @@ def test_should_create_receipt(client: TestClient) -> None:
 
 def test_should_add_product_in_receipt(client: TestClient) -> None:
     unit_id = create_unit_and_get_id(client)
-    product_price = 10
+    product_price = 1.5
     product_id = create_product_and_get_id(client, unit_id, product_price)
 
     response = client.post("/receipts")
@@ -41,8 +41,8 @@ def test_should_add_product_in_receipt(client: TestClient) -> None:
         "receipt": {
             "id": receipt_id,
             "status": "open",
-            "products": [{"id": product_id, "quantity": 3, "price": 10, "total": 30}],
-            "total": 30,
+            "products": [{"id": product_id, "quantity": 3, "price": 1.5, "total": 4.5}],
+            "total": 4.5,
         }
     }
 
@@ -80,7 +80,7 @@ def test_should_not_add_unknown_product_in_receipt(client: TestClient) -> None:
 
 def test_read_by_id(client: TestClient) -> None:
     unit_id = create_unit_and_get_id(client)
-    product_price = 10
+    product_price = 1.5
     product_id = create_product_and_get_id(client, unit_id, product_price)
 
     response = client.post("/receipts")
@@ -95,8 +95,8 @@ def test_read_by_id(client: TestClient) -> None:
         "receipt": {
             "id": receipt_id,
             "status": "open",
-            "products": [{"id": product_id, "quantity": 3, "price": 10, "total": 30}],
-            "total": 30,
+            "products": [{"id": product_id, "quantity": 3, "price": 1.5, "total": 4.5}],
+            "total": 4.5,
         }
     }
 

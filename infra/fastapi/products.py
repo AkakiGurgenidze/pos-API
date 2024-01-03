@@ -15,7 +15,7 @@ class CreateProductItem(BaseModel):
     unit_id: UUID
     name: str
     barcode: str
-    price: int
+    price: float
 
 
 class ProductItem(BaseModel):
@@ -23,7 +23,7 @@ class ProductItem(BaseModel):
     unit_id: UUID
     name: str
     barcode: str
-    price: int
+    price: float
 
 
 class ProductItemEnvelope(BaseModel):
@@ -87,7 +87,7 @@ def read_all_product(products: ProductRepositoryDependable) -> dict[str, list[Pr
     responses={404: {"model": ErrorMessageEnvelope}},
 )
 def update_product(
-    product_id: UUID, product_price: int, products: ProductRepositoryDependable
+    product_id: UUID, product_price: float, products: ProductRepositoryDependable
 ) -> dict[str, str] | JSONResponse:
     try:
         products.update_price(product_id, product_price)

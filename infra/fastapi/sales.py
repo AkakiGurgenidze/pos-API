@@ -9,7 +9,7 @@ sales_api = APIRouter(tags=["Sales"])
 
 class SalesItem(BaseModel):
     n_receipts: int
-    revenue: int
+    revenue: float
 
 
 class SalesItemEnvelope(BaseModel):
