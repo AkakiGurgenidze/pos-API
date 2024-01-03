@@ -2,13 +2,13 @@ import sqlite3
 from dataclasses import dataclass
 from sqlite3 import Connection, Cursor
 
-from infra.constants import SQL_FILE
+from infra.constants import SQL_FILE_TEST
 
 
 @dataclass
 class Database:
     database_name: str
-    sql_file: str = SQL_FILE
+    sql_file: str = SQL_FILE_TEST
 
     def __post_init__(self) -> None:
         self.con = sqlite3.connect(self.database_name)

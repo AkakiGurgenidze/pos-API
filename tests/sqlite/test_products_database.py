@@ -6,6 +6,7 @@ import pytest
 from core.errors import AlreadyExistError, DoesNotExistError
 from core.product import Product
 from core.unit import Unit
+from infra.constants import SQL_FILE_TEST
 from infra.sqlite.database_connect import Database
 from infra.sqlite.products import ProductsDatabase
 from infra.sqlite.units import UnitsDatabase
@@ -13,7 +14,7 @@ from infra.sqlite.units import UnitsDatabase
 
 @pytest.fixture
 def db() -> Database:
-    db = Database(":memory:", os.path.abspath("../infra/sqlite/start_up.sql"))
+    db = Database(":memory:", os.path.abspath(SQL_FILE_TEST))
     db.initial()
     return db
 
