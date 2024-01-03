@@ -107,6 +107,15 @@ def test_update_status_of_receipt(db: Database) -> None:
     db.close_database()
 
 
+def test_update_status_of_unknown_receipt(db: Database) -> None:
+    receipts = ReceiptsDatabase(db.get_connection(), db.get_cursor())
+
+    with pytest.raises(DoesNotExistError):
+        receipts.update_status(uuid4(), "closed")
+
+    db.close_database()
+
+
 def test_delete_receipt(db: Database) -> None:
     receipts = ReceiptsDatabase(db.get_connection(), db.get_cursor())
 
