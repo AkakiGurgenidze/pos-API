@@ -25,7 +25,7 @@ def init_app():
 
     if os.getenv("POS_REPOSITORY_KIND", "memory") == "sqlite":
         db = Database(DATABASE_NAME, os.path.abspath(SQL_FILE))
-        db.initial()
+        # db.initial()    Uncomment this if you want to create initial db
         app.state.units = UnitsDatabase(db.get_connection(), db.get_cursor())  # type: ignore
         app.state.products = ProductsDatabase(db.get_connection(), db.get_cursor())  # type: ignore
         app.state.receipts = ReceiptsDatabase(db.get_connection(), db.get_cursor())  # type: ignore

@@ -97,6 +97,8 @@ class ReceiptsDatabase:
                 receipt_id,
             ) = row
 
+            n_receipts += 1
+
             res_products_in_receipts = self.cur.execute(
                 "select * from products_in_receipts where receipt_id = ?", [(str(receipt_id))]
             )
@@ -110,6 +112,5 @@ class ReceiptsDatabase:
 
                 product = ProductsDatabase(self.con, self.cur).read(product_id)
                 revenue += product.price * quantity
-                n_receipts += 1
 
         return Sales(n_receipts, revenue)

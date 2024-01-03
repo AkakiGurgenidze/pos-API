@@ -11,7 +11,7 @@ class Database:
     sql_file: str = SQL_FILE_TEST
 
     def __post_init__(self) -> None:
-        self.con = sqlite3.connect(self.database_name)
+        self.con = sqlite3.connect(self.database_name, check_same_thread=False)
         self.con.execute("PRAGMA foreign_keys = 1")
         self.cur = self.con.cursor()
 
